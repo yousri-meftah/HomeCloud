@@ -2,12 +2,13 @@
 
 WORKDIR /app
 
-RUN pip install --no-cache-dir uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 COPY pyproject.toml ./
-RUN uv sync --no-dev
+RUN uv sync --no-dev --frozen
 
-COPY . .
+COPY src/ src/
+COPY migrations/ migrations/
 
 COPY docker/docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh

@@ -6,84 +6,114 @@ HomeCloud is a self-service platform that lets you register accounts, request Vi
 
 ## Architecture
 
-- **Frontend**: Next.js 14 App Router, deployed to Cloudflare Workers
-- **Backend**: Python + FastAPI, running on the homelab
+- **Frontend**: Next.js 14 App Router + shadcn/ui, deployed to Cloudflare Pages/Workers
+- **Backend**: Python 3.12 + FastAPI, layered architecture (api → controllers → services → models)
 - **Virtualization**: Proxmox VE 8 managing KVM VMs
 - **Networking**: Cloudflare Tunnel per VM (no port forwarding)
-- **Database**: PostgreSQL (Docker Compose)
-- **Search**: Elasticsearch (Docker Compose)
+- **Database**: PostgreSQL 16 (Docker Compose)
+- **Search**: Elasticsearch 8 (Docker Compose)
 - **Storage**: Cloudflare R2 (S3-compatible)
+- **Payments**: Stripe (test mode)
+- **AI**: Google Gemini
 
 ## Quick Start
 
 ### Prerequisites
-- Proxmox VE 8 installed on homelab machine
+
+- Python 3.12+, [uv](https://docs.astral.sh/uv/) package manager
+- Node.js 20+
+- Docker & Docker Compose
+- Proxmox VE 8 on homelab machine
 - Cloudflare account with custom domain
-- Stripe account (test mode)
-- Docker and Docker Compose
 
-### Setup
+### 1. Start infrastructure
 
-1. **Configure environment variables**
-   \\\ash
-   cp backend/.env.example backend/.env
-   cp frontend/.env.example frontend/.env.local
-   # Fill in your values
-   \\\
+```bash
+docker compose up -d
+```
 
-2. **Start infrastructure services**
-   \\\ash
-   docker compose up -d
-   \\\
+This starts PostgreSQL 16 and Elasticsearch 8.
 
-3. **Backend**
-   \\\ash
-   cd backend
-   uv sync
-   uv run uvicorn src.main:app --reload
-   \\\
+### 2. Backend
 
-4. **Frontend**
-   \\\ash
-   cd frontend
-   npm install
-   npm run dev
-   \\\
+```bash
+cd backend
+cp envs/.env.database envs/.env.database.local   # fill in your values
+uv sync
+uv run alembic upgrade head
+uv run uvicorn src.main:app --reload
+```
+
+API available at `http://localhost:8000`, docs at `/docs`.
+
+### 3. Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+App available at `http://localhost:3000`.
+
+### 4. Deploy frontend to Cloudflare
+
+```bash
+cd frontend
+npm run build:cf
+npm run deploy
+```
 
 ## Project Structure
 
-\\\
+```
 homecloud/
-├── backend/              # FastAPI backend
-│   ├── src/              # Application source
-│   │   ├── auth/         # Authentication module
-│   │   ├── vps/          # VPS lifecycle module
-│   │   ├── billing/      # Stripe billing module
-│   │   ├── ai/           # Gemini AI module
-│   │   ├── admin/        # Admin panel module
-│   │   ├── services/     # Proxmox, Tunnel, SSH services
-│   │   ├── db/           # Models, schemas, engine
-│   │   └── core/         # Security, encryption
-│   └── tests/            # Backend tests
-├── frontend/             # Next.js frontend
+├── backend/                    # FastAPI backend
 │   ├── src/
-│   │   ├── app/          # App Router pages
-│   │   ├── components/   # Reusable UI components
-│   │   ├── lib/          # Utilities, API client
-│   │   ├── hooks/        # React hooks
-│   │   └── types/        # TypeScript types
-│   └── tests/            # Frontend tests
-├── infra/                # Infrastructure scripts
-│   ├── proxmox/          # Proxmox setup scripts
-│   └── cloudflare/       # Cloudflare configs
-├── docs/                 # Documentation
-├── scripts/              # Deployment scripts
-└── docker-compose.yml    # PostgreSQL + Elasticsearch
-\\\
+│   │   ├── api/                # Router definitions (topology only)
+│   │   ├── controllers/        # Request handlers
+│   │   ├── services/           # Business logic stubs
+│   │   ├── models/             # SQLAlchemy ORM models
+│   │   ├── schemas/            # Pydantic request/response schemas
+│   │   ├── enums/              # Enumerations (VPSPlan, VPSStatus, UserRole)
+│   │   ├── config/             # Settings + env loader
+│   │   ├── db/                 # Engine, session, Base
+│   │   └── main.py             # FastAPI app entry
+│   ├── migrations/             # Alembic async migrations
+│   ├── docker/                 # Dockerfile + entrypoint
+│   ├── envs/                   # Scoped .env.* files (gitignored)
+│   ├── tests/
+│   └── pyproject.toml
+├── frontend/                   # Next.js 14 App Router
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── (auth)/         # Auth route group (login, register, verify)
+│   │   │   └── (dashboard)/    # Dashboard route group (vps, billing, ai, admin)
+│   │   ├── components/         # UI components
+│   │   ├── hooks/              # React hooks
+│   │   ├── lib/                # Utilities, API client
+│   │   ├── styles/             # Global styles
+│   │   └── types/              # TypeScript types
+│   ├── wrangler.toml
+│   └── package.json
+├── docker-compose.yml          # PostgreSQL + Elasticsearch + Backend
+└── README.md
+```
 
-## Implementation Plan
+## Environment Variables
 
-See \PLAN.md\ in the project root for the complete step-by-step implementation plan.
+Backend env files are scoped by service in `backend/envs/`:
+
+| File | Purpose |
+|------|---------|
+| `.env.database` | PostgreSQL connection |
+| `.env.proxmox` | Proxmox VE API credentials |
+| `.env.cloudflare` | Cloudflare API token + zone |
+| `.env.stripe` | Stripe keys + price IDs |
+| `.env.email` | SMTP credentials |
+| `.env.monitoring` | Sentry DSN, Elasticsearch URL |
+
+All `.env.*` files are gitignored. Copy and fill in your values.
 
 ## Technology Stack
 
@@ -93,14 +123,13 @@ See \PLAN.md\ in the project root for the complete step-by-step implementation p
 | Backend | Python 3.12, FastAPI, uv |
 | Virtualization | Proxmox VE 8, KVM |
 | Networking | Cloudflare Tunnel |
-| Database | PostgreSQL 16, SQLAlchemy, Alembic |
+| Database | PostgreSQL 16, SQLAlchemy 2, Alembic |
 | Search | Elasticsearch 8 |
 | Storage | Cloudflare R2 |
 | Payments | Stripe (test mode) |
 | AI | Google Gemini |
 | Monitoring | Sentry |
-| CI/CD | GitHub Actions |
 
 ## License
 
-Educational prototype - not for production use.
+Educational prototype — not for production use.

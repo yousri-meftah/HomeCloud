@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     CORS_ORIGINS: list[str] = ["http://localhost:3000"]
 
     # Database
-    DATABASE_URL: str = "postgresql://homecloud:homecloud@localhost:5432/homecloud"
+    DATABASE_URL: str = "postgresql+asyncpg://homecloud:homecloud@localhost:5432/homecloud"
     DATABASE_POOL_SIZE: int = 5
     DATABASE_MAX_OVERFLOW: int = 10
 

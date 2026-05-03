@@ -1,1 +1,1 @@
-﻿"""API client utility functions."""
+﻿// API client utility functions

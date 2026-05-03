@@ -1,10 +1,12 @@
 ﻿name = "homecloud-frontend"
-main = ".next/standalone/server.js"
 compatibility_date = "2024-03-01"
 compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
 
-# Cloudflare Workers deployment
-# Run: npx wrangler deploy
+# Cloudflare Pages deployment
+# Build:  npm run build:cf
+# Preview: npm run preview
+# Deploy: npm run deploy
 
 [env.production]
 name = "homecloud-frontend-prod"

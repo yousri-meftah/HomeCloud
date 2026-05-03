@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "build:cf": "npx @cloudflare/next-on-pages",
+    "preview": "npx wrangler pages dev .vercel/output/static --compatibility-date=2024-01-01",
+    "deploy": "npx wrangler pages deploy .vercel/output/static",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "test": "playwright test"
@@ -31,10 +33,10 @@
     "zod": "^3.22.4",
     "react-hook-form": "^7.51.0",
     "@hookform/resolvers": "^3.3.4",
-    "date-fns": "^3.6.0",
-    "ai": "^3.0.0"
+    "date-fns": "^3.6.0"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.0",
     "@playwright/test": "^1.42.0",
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.64",

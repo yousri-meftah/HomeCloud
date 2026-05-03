@@ -1,13 +1,13 @@
 ﻿/** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "standalone",
+  output: "export",
+  images: {
+    unoptimized: true,
+  },
   experimental: {
     serverActions: {
       bodySizeLimit: "2mb",
     },
-  },
-  images: {
-    remotePatterns: [],
   },
 };
 

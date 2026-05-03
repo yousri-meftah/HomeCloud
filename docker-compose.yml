@@ -37,6 +37,27 @@ services:
       timeout: 5s
       retries: 5
 
+  backend:
+    build:
+      context: ./backend
+      dockerfile: docker/Dockerfile
+    container_name: homecloud-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    env_file:
+      - backend/envs/.env.database
+      - backend/envs/.env.proxmox
+      - backend/envs/.env.cloudflare
+      - backend/envs/.env.stripe
+      - backend/envs/.env.email
+      - backend/envs/.env.monitoring
+
 volumes:
   postgres_data:
   elasticsearch_data:

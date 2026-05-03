@@ -1,4 +1,4 @@
-﻿"""React hooks for API interactions."""
+﻿// React hooks for API interactions
 
 export function useAuth() {
   // To be implemented

@@ -1,4 +1,4 @@
-﻿"""TypeScript type definitions."""
+﻿// TypeScript type definitions
 
 export interface User {
   id: string;
