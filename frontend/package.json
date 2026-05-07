@@ -1,19 +1,21 @@
-﻿{
+{
   "name": "homecloud-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:cf": "npx @cloudflare/next-on-pages",
-    "preview": "npx wrangler pages dev .vercel/output/static --compatibility-date=2024-01-01",
-    "deploy": "npx wrangler pages deploy .vercel/output/static",
-    "lint": "next lint",
+    "build:cf": "opennextjs-cloudflare build",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "playwright test"
   },
   "dependencies": {
-    "next": "^14.2.0",
+    "next": "16.2.5",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -36,17 +38,20 @@
     "date-fns": "^3.6.0"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.13.0",
+    "@opennextjs/cloudflare": "^1.19.7",
     "@playwright/test": "^1.42.0",
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
     "autoprefixer": "^10.4.18",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "^14.2.0",
-    "postcss": "^8.4.35",
+    "eslint": "^9.39.0",
+    "eslint-config-next": "16.2.5",
+    "postcss": "^8.5.10",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.4.2",
-    "wrangler": "^3.35.0"
+    "wrangler": "^4.86.0"
+  },
+  "overrides": {
+    "postcss": "^8.5.10"
   }
 }

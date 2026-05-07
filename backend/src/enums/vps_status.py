@@ -1,8 +1,8 @@
 ﻿"""VPS lifecycle statuses."""
-from enum import Enum
+from enum import StrEnum
 
 
-class VPSStatus(str, Enum):
+class VPSStatus(StrEnum):
     PROVISIONING = "provisioning"
     RUNNING = "running"
     STOPPED = "stopped"

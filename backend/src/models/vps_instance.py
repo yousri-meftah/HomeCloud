@@ -2,12 +2,11 @@
 
 import uuid
 
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, func
-from sqlalchemy.dialects.postgresql import UUID, INET
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy.dialects.postgresql import INET, UUID
 from sqlalchemy.orm import relationship
 
 from src.db.base import Base
-from src.enums.vps_plan import VPSPlan
 from src.enums.vps_status import VPSStatus
 
 

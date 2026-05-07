@@ -6,7 +6,7 @@ HomeCloud is a self-service platform that lets you register accounts, request Vi
 
 ## Architecture
 
-- **Frontend**: Next.js 14 App Router + shadcn/ui, deployed to Cloudflare Pages/Workers
+- **Frontend**: Next.js App Router + shadcn/ui, deployed to Cloudflare Pages/Workers
 - **Backend**: Python 3.12 + FastAPI, layered architecture (api → controllers → services → models)
 - **Virtualization**: Proxmox VE 8 managing KVM VMs
 - **Networking**: Cloudflare Tunnel per VM (no port forwarding)
@@ -38,7 +38,12 @@ This starts PostgreSQL 16 and Elasticsearch 8.
 
 ```bash
 cd backend
-cp envs/.env.database envs/.env.database.local   # fill in your values
+cp envs/database.example envs/.env.database
+cp envs/proxmox.example envs/.env.proxmox
+cp envs/cloudflare.example envs/.env.cloudflare
+cp envs/stripe.example envs/.env.stripe
+cp envs/email.example envs/.env.email
+cp envs/monitoring.example envs/.env.monitoring
 uv sync
 uv run alembic upgrade head
 uv run uvicorn src.main:app --reload
@@ -84,7 +89,7 @@ homecloud/
 │   ├── envs/                   # Scoped .env.* files (gitignored)
 │   ├── tests/
 │   └── pyproject.toml
-├── frontend/                   # Next.js 14 App Router
+├── frontend/                   # Next.js App Router
 │   ├── src/
 │   │   ├── app/
 │   │   │   ├── (auth)/         # Auth route group (login, register, verify)
@@ -94,7 +99,7 @@ homecloud/
 │   │   ├── lib/                # Utilities, API client
 │   │   ├── styles/             # Global styles
 │   │   └── types/              # TypeScript types
-│   ├── wrangler.toml
+│   ├── wrangler.jsonc
 │   └── package.json
 ├── docker-compose.yml          # PostgreSQL + Elasticsearch + Backend
 └── README.md
@@ -102,7 +107,8 @@ homecloud/
 
 ## Environment Variables
 
-Backend env files are scoped by service in `backend/envs/`:
+Backend env files are scoped by service in `backend/envs/`. Commit only the `*.example`
+templates and keep the real `.env.*` files local:
 
 | File | Purpose |
 |------|---------|
@@ -113,13 +119,13 @@ Backend env files are scoped by service in `backend/envs/`:
 | `.env.email` | SMTP credentials |
 | `.env.monitoring` | Sentry DSN, Elasticsearch URL |
 
-All `.env.*` files are gitignored. Copy and fill in your values.
+All real `.env.*` files are gitignored. Copy the templates and fill in your values.
 
 ## Technology Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | Next.js 14, shadcn/ui, Tailwind CSS |
+| Frontend | Next.js, shadcn/ui, Tailwind CSS |
 | Backend | Python 3.12, FastAPI, uv |
 | Virtualization | Proxmox VE 8, KVM |
 | Networking | Cloudflare Tunnel |

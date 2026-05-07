@@ -1,0 +1,7 @@
+# Observability
+SENTRY_DSN=
+ELASTICSEARCH_URL=http://localhost:9200
+
+# AI
+GEMINI_API_KEY=
+GEMINI_MODEL=gemini-1.5-flash

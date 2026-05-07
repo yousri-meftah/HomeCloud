@@ -6,7 +6,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # Load all env files before anything else
 import src.config.loader  # noqa: F401
-
 from src.config import settings
 
 
@@ -31,11 +30,11 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    from src.api.auth import router as auth_router
-    from src.api.vps import router as vps_router
-    from src.api.billing import router as billing_router
-    from src.api.ai import router as ai_router
     from src.api.admin import router as admin_router
+    from src.api.ai import router as ai_router
+    from src.api.auth import router as auth_router
+    from src.api.billing import router as billing_router
+    from src.api.vps import router as vps_router
 
     app.include_router(auth_router, prefix="/auth", tags=["auth"])
     app.include_router(vps_router, prefix="/vps", tags=["vps"])

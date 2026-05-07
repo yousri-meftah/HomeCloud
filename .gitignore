@@ -18,6 +18,7 @@ build/
 # Node
 node_modules/
 .next/
+.open-next/
 out/
 .turbo/
 *.tsbuildinfo
@@ -44,6 +45,7 @@ Thumbs.db
 
 # Scoped env files
 backend/envs/.env.*
+!backend/envs/*.example
 
 # Docker volumes
 postgres_data/
@@ -56,6 +58,3 @@ elasticsearch_data/
 # Logs
 *.log
 logs/
-
-# GitHub (workflow files pushed later)
-.github/

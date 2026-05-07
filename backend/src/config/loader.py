@@ -1,5 +1,4 @@
 ﻿"""Multi-env-file loader. Reads all envs/.env.* files before settings init."""
-import os
 from pathlib import Path
 
 

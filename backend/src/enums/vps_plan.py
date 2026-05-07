@@ -1,8 +1,8 @@
 ﻿"""VPS plan tiers."""
-from enum import Enum
+from enum import StrEnum
 
 
-class VPSPlan(str, Enum):
+class VPSPlan(StrEnum):
     SMALL = "small"
     MEDIUM = "medium"
     LARGE = "large"

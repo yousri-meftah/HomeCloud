@@ -1,0 +1,4 @@
+# PostgreSQL
+DATABASE_URL=postgresql+asyncpg://homecloud:change-me@localhost:5432/homecloud
+DATABASE_POOL_SIZE=5
+DATABASE_MAX_OVERFLOW=10

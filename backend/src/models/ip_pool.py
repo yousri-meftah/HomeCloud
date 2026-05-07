@@ -1,7 +1,7 @@
 ﻿"""IP pool model."""
 
-from sqlalchemy import Column, Boolean, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID, INET
+from sqlalchemy import Boolean, Column, ForeignKey
+from sqlalchemy.dialects.postgresql import INET, UUID
 from sqlalchemy.orm import relationship
 
 from src.db.base import Base
